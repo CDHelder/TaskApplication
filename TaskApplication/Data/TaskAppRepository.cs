@@ -50,7 +50,7 @@ namespace TaskApplication.Data
 
         public async Task<bool> SaveChanges()
         {
-            //Return alleen als er tenminste een rij is veranderd
+            //Return true als er tenminste een rij is veranderd
             return (await db.SaveChangesAsync()) > 0;
         }
 
@@ -59,6 +59,17 @@ namespace TaskApplication.Data
             IQueryable<ToDoTask> query = db.ToDoTasks;
             query = query.OrderByDescending(t => t.Name).Where(d => d.BeginDate == dateTime);
             return await query.ToArrayAsync();
+        }
+
+        public async Task<int> GetMaxId()
+        {
+            IQueryable<ToDoTask> query = db.ToDoTasks;
+            return await query.MaxAsync(t => t.Id);
+        }
+
+        public void UpdateTask(ToDoTask toDoTask)
+        {
+            db.Entry(toDoTask).State = EntityState.Modified;
         }
     }
 }

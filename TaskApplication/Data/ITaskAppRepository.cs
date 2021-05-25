@@ -10,7 +10,10 @@ namespace TaskApplication.Data
     {
         void Add(ToDoTask toDoTask);
         void Delete(ToDoTask toDoTask);
+        void UpdateTask(ToDoTask toDoTask);
 
+
+        Task<int> GetMaxId();
         Task<ToDoTask[]> GetAllTasksAsync();
         Task<ToDoTask> GetTaskAsync(int id);
         Task<ToDoTask[]> SearchTaskByName(string name);
