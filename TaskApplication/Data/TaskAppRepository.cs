@@ -34,14 +34,14 @@ namespace TaskApplication.Data
             return await query.ToArrayAsync();
         }
 
-        public async Task<ToDoTask> GetTaskAsync(int id)
+        public async Task<ToDoTask> GetTaskAsync(string name)
         {
             IQueryable<ToDoTask> query = db.ToDoTasks;
-            query = query.Where(t => t.Id == id);
+            query = query.Where(t => t.Name == name);
             return await query.FirstOrDefaultAsync();
         }
 
-        public async Task<ToDoTask[]> SearchTaskByName(string name)
+        public async Task<ToDoTask[]> SearchTasksByName(string name)
         {
             IQueryable<ToDoTask> query = db.ToDoTasks;
             query = query.OrderByDescending(t => t.Name).Where(d => d.Name.Contains(name));

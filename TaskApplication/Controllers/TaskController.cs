@@ -35,27 +35,28 @@ namespace TaskApplication.Controllers
                 var tasks = await appRepository.GetAllTasksAsync();
                 return Ok(mapper.Map<ToDoTaskModel[]>(tasks));
             }
-            catch (Exception)
+            //Maybe exception logica toevoegen aand return
+            catch (Exception ex)
             {
-                return this.StatusCode(StatusCodes.Status500InternalServerError, "Database Failure");
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: \n{ex}");
             }
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetTask(int id)
+        [HttpGet("{name}")]
+        public async Task<IActionResult> GetTask(string name)
         {
             try
             {
-                var task = await appRepository.GetTaskAsync(id);
+                var task = await appRepository.GetTaskAsync(name);
 
                 if (task == null)
                     return NotFound();
 
                 return Ok(mapper.Map<ToDoTaskModel>(task));
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return this.StatusCode(StatusCodes.Status500InternalServerError, "Database Failure");
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: \n{ex}");
             }
         }
 
@@ -64,13 +65,13 @@ namespace TaskApplication.Controllers
         {
             try
             {
-                var tasks = await appRepository.SearchTaskByName(search);
+                var tasks = await appRepository.SearchTasksByName(search);
                 if (!tasks.Any()) return NotFound();
                 return Ok(mapper.Map<ToDoTaskModel[]>(tasks));
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return this.StatusCode(StatusCodes.Status500InternalServerError, "Database Failure");
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: \n{ex}");
             }
         }
 
@@ -83,14 +84,14 @@ namespace TaskApplication.Controllers
                 if (!tasks.Any()) return NotFound();
                 return Ok(mapper.Map<ToDoTaskModel[]>(tasks));
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return this.StatusCode(StatusCodes.Status500InternalServerError, "Database Failure");
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: \n{ex}");
             }
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(ToDoTask model)
+        public async Task<IActionResult> Post(ToDoTaskModel model)
         {
             try
             {
@@ -107,45 +108,73 @@ namespace TaskApplication.Controllers
                 //Extra controle om te kijken of een id/naam al bestaat
                 //var existing = await appRepository.GetTaskAsync(model.Id);
                 //if (existing != null) return BadRequest($"Task with id: {model.Id} already exists");
-                model.Id = await appRepository.GetMaxId() + 1;
+                //model.Id = await appRepository.GetMaxId() + 1;
 
-                appRepository.Add(model);
+
+                var existing = await appRepository.GetTaskAsync(model.Name);
+                if (existing != null) return BadRequest("That name is already in use");
+
+                var location = linkGenerator.GetPathByAction("GetTask", "Task", new { Name = model.Name });
+                if (string.IsNullOrWhiteSpace(location)) return BadRequest($"Couldn't use name: {model.Name}");
+
+                var task = mapper.Map<ToDoTask>(model);
+                appRepository.Add(task);
                 if (await appRepository.SaveChanges())
                 {
-                    return Created($"/api/Task/{model.Id}", mapper.Map<ToDoTaskModel>(model));
+                    return Created($"/api/Task/{model.Name}", mapper.Map<ToDoTaskModel>(model));
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return this.StatusCode(StatusCodes.Status500InternalServerError, "Database Failure");
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: \n{ex}");
             }
 
             return BadRequest();
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, ToDoTaskModel model)
+        [HttpPut("{name}")]
+        public async Task<IActionResult> Put(string name, ToDoTaskModel model)
         {
             try
             {
-                var oldTask = await appRepository.GetTaskAsync(id);
-                if (oldTask == null)
-                {
-                    return NotFound($"Couldn't find task with id of {id}");
-                }
+                var oldTask = await appRepository.GetTaskAsync(name);
+                if (oldTask == null) return NotFound($"Couldn't find task with name: {name}");
 
-                //Update functie werkt nog niet helemaal, rest wel
                 mapper.Map(model, oldTask);
                 //appRepository.UpdateTask(oldTask);
+
                 if (await appRepository.SaveChanges())
                 {
-                    return Ok(oldTask);
+                    return Ok(mapper.Map<ToDoTaskModel>(oldTask));
                 }
 
             }
             catch (Exception ex)
             {
-                return this.StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: \n{ex}");
+            }
+
+            return BadRequest();
+        }
+
+        [HttpDelete("{name}")]
+        public async Task<IActionResult> Delete(string name)
+        {
+            try
+            {
+                var oldTask = await appRepository.GetTaskAsync(name);
+                if (oldTask == null) return NotFound($"Couldn't find task with name: {name}");
+
+                appRepository.Delete(oldTask);
+
+                if (await appRepository.SaveChanges())
+                {
+                    return Ok();
+                }
+            }
+            catch (Exception ex)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Database Failure: \n{ex}");
             }
 
             return BadRequest();

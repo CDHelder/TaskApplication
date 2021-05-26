@@ -9,7 +9,6 @@ namespace TaskApplication.Models
 {
     public class ToDoTaskModel
     {
-        public int Id { get; set; }
         public string Name { get; set; }
 
         public TypeStatus Status { get; set; }

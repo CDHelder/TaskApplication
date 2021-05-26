@@ -49,8 +49,8 @@ namespace TaskApplication.Migrations
                         new
                         {
                             Id = 1,
-                            BeginDate = new DateTime(2021, 5, 21, 0, 0, 0, 0, DateTimeKind.Local),
-                            EndDate = new DateTime(2021, 5, 25, 0, 0, 0, 0, DateTimeKind.Local),
+                            BeginDate = new DateTime(2021, 5, 26, 0, 0, 0, 0, DateTimeKind.Local),
+                            EndDate = new DateTime(2021, 5, 30, 0, 0, 0, 0, DateTimeKind.Local),
                             Name = "Schoonmaken",
                             Notes = "Opruimen en netjes maken",
                             Status = 0
@@ -58,8 +58,8 @@ namespace TaskApplication.Migrations
                         new
                         {
                             Id = 2,
-                            BeginDate = new DateTime(2021, 5, 21, 0, 0, 0, 0, DateTimeKind.Local),
-                            EndDate = new DateTime(2021, 5, 25, 0, 0, 0, 0, DateTimeKind.Local),
+                            BeginDate = new DateTime(2021, 5, 26, 0, 0, 0, 0, DateTimeKind.Local),
+                            EndDate = new DateTime(2021, 5, 30, 0, 0, 0, 0, DateTimeKind.Local),
                             Name = "Schilderen",
                             Notes = "Muren schilderen",
                             Status = 0
@@ -67,8 +67,8 @@ namespace TaskApplication.Migrations
                         new
                         {
                             Id = 3,
-                            BeginDate = new DateTime(2021, 5, 21, 0, 0, 0, 0, DateTimeKind.Local),
-                            EndDate = new DateTime(2021, 5, 25, 0, 0, 0, 0, DateTimeKind.Local),
+                            BeginDate = new DateTime(2021, 5, 26, 0, 0, 0, 0, DateTimeKind.Local),
+                            EndDate = new DateTime(2021, 5, 30, 0, 0, 0, 0, DateTimeKind.Local),
                             Name = "Meubels bouwen",
                             Notes = "Ikea meubels in elkaar zetten",
                             Status = 0

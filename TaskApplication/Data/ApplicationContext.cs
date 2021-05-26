@@ -26,7 +26,7 @@ namespace TaskApplication.Data
 
         protected override void OnModelCreating(ModelBuilder bldr)
         {
-            bldr.Entity<ToDoTask>().HasData(new
+                bldr.Entity<ToDoTask>().HasData(new
             {
                 Id = 1,
                 Name = "Schoonmaken",

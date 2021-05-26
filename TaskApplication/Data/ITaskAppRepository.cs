@@ -15,8 +15,8 @@ namespace TaskApplication.Data
 
         Task<int> GetMaxId();
         Task<ToDoTask[]> GetAllTasksAsync();
-        Task<ToDoTask> GetTaskAsync(int id);
-        Task<ToDoTask[]> SearchTaskByName(string name);
+        Task<ToDoTask> GetTaskAsync(string name);
+        Task<ToDoTask[]> SearchTasksByName(string name);
         Task<ToDoTask[]> SearchTaskByDate(DateTime dateTime);
 
         Task<bool> SaveChanges();

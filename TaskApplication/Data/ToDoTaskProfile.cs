@@ -13,6 +13,7 @@ namespace TaskApplication.Data
         public ToDoTaskProfile()
         {
             this.CreateMap<ToDoTask, ToDoTaskModel>();
+            this.CreateMap<ToDoTaskModel, ToDoTask>();
         }
     }
 }
