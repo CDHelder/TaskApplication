@@ -12,10 +12,8 @@ namespace TaskApplication.Data
         void Delete(ToDoTask toDoTask);
         void UpdateTask(ToDoTask toDoTask);
 
-
-        Task<int> GetMaxId();
         Task<ToDoTask[]> GetAllTasksAsync();
-        Task<ToDoTask> GetTaskAsync(string name);
+        Task<ToDoTask> GetTaskAsync(int id);
         Task<ToDoTask[]> SearchTasksByName(string name);
         Task<ToDoTask[]> SearchTaskByDate(DateTime dateTime);
 

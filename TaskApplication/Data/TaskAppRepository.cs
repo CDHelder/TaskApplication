@@ -30,15 +30,17 @@ namespace TaskApplication.Data
         public async Task<ToDoTask[]> GetAllTasksAsync()
         {
             IQueryable<ToDoTask> query = db.ToDoTasks;
-            query = query.OrderByDescending(t => t.Name);
+            query = query.OrderByDescending(t => t.EndDate);
             return await query.ToArrayAsync();
         }
 
-        public async Task<ToDoTask> GetTaskAsync(string name)
+        public async Task<ToDoTask> GetTaskAsync(int id)
         {
-            IQueryable<ToDoTask> query = db.ToDoTasks;
+            return await db.ToDoTasks.FirstOrDefaultAsync(r => r.Id == id);
+
+            /*IQueryable<ToDoTask> query = db.ToDoTasks;
             query = query.Where(t => t.Name == name);
-            return await query.FirstOrDefaultAsync();
+            return await query.FirstOrDefaultAsync();*/
         }
 
         public async Task<ToDoTask[]> SearchTasksByName(string name)
@@ -59,12 +61,6 @@ namespace TaskApplication.Data
             IQueryable<ToDoTask> query = db.ToDoTasks;
             query = query.OrderByDescending(t => t.Name).Where(d => d.BeginDate == dateTime);
             return await query.ToArrayAsync();
-        }
-
-        public async Task<int> GetMaxId()
-        {
-            IQueryable<ToDoTask> query = db.ToDoTasks;
-            return await query.MaxAsync(t => t.Id);
         }
 
         public void UpdateTask(ToDoTask toDoTask)

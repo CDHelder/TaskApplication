@@ -3,12 +3,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TaskApplication.Data;
 using TaskApplication.Data.Entities;
-using TaskApplication.Models;
 
 namespace TaskApplication.Controllers
 {
@@ -33,7 +31,8 @@ namespace TaskApplication.Controllers
             try
             {
                 var tasks = await appRepository.GetAllTasksAsync();
-                return Ok(mapper.Map<ToDoTaskModel[]>(tasks));
+                return Ok(tasks);
+                //return Ok(mapper.Map<ToDoTaskModel[]>(tasks));
             }
             //Maybe exception logica toevoegen aand return
             catch (Exception ex)
@@ -42,17 +41,18 @@ namespace TaskApplication.Controllers
             }
         }
 
-        [HttpGet("{name}")]
-        public async Task<IActionResult> GetTask(string name)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetTask(int id)
         {
             try
             {
-                var task = await appRepository.GetTaskAsync(name);
+                var task = await appRepository.GetTaskAsync(id);
 
                 if (task == null)
                     return NotFound();
 
-                return Ok(mapper.Map<ToDoTaskModel>(task));
+                return Ok(task);
+                //return Ok(mapper.Map<ToDoTaskModel>(task));
             }
             catch (Exception ex)
             {
@@ -67,7 +67,8 @@ namespace TaskApplication.Controllers
             {
                 var tasks = await appRepository.SearchTasksByName(search);
                 if (!tasks.Any()) return NotFound();
-                return Ok(mapper.Map<ToDoTaskModel[]>(tasks));
+                return Ok(tasks);
+                //return Ok(mapper.Map<ToDoTaskModel[]>(tasks));
             }
             catch (Exception ex)
             {
@@ -82,7 +83,8 @@ namespace TaskApplication.Controllers
             {
                 var tasks = await appRepository.SearchTaskByDate(datetime);
                 if (!tasks.Any()) return NotFound();
-                return Ok(mapper.Map<ToDoTaskModel[]>(tasks));
+                return Ok(tasks);
+                //return Ok(mapper.Map<ToDoTaskModel[]>(tasks));
             }
             catch (Exception ex)
             {
@@ -91,7 +93,7 @@ namespace TaskApplication.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(ToDoTaskModel model)
+        public async Task<IActionResult> Post(ToDoTask task)
         {
             try
             {
@@ -111,17 +113,18 @@ namespace TaskApplication.Controllers
                 //model.Id = await appRepository.GetMaxId() + 1;
 
 
-                var existing = await appRepository.GetTaskAsync(model.Name);
-                if (existing != null) return BadRequest("That name is already in use");
+                //var existing = await appRepository.GetTaskAsync(model.Name);
+                //if (existing != null) return BadRequest("That name is already in use");
 
-                var location = linkGenerator.GetPathByAction("GetTask", "Task", new { Name = model.Name });
-                if (string.IsNullOrWhiteSpace(location)) return BadRequest($"Couldn't use name: {model.Name}");
+                //var location = linkGenerator.GetPathByAction("GetTask", "Task", new { Name = model.Name });
+                //if (string.IsNullOrWhiteSpace(location)) return BadRequest($"Couldn't use name: {model.Name}");
 
-                var task = mapper.Map<ToDoTask>(model);
+                //var task = mapper.Map<ToDoTask>(model);
                 appRepository.Add(task);
                 if (await appRepository.SaveChanges())
                 {
-                    return Created($"/api/Task/{model.Name}", mapper.Map<ToDoTaskModel>(model));
+                    return Created($"/api/Task/{task.Id}", task);
+                    //return Created($"/api/Task/{model.Id}", mapper.Map<ToDoTaskModel>(model));
                 }
             }
             catch (Exception ex)
@@ -132,20 +135,21 @@ namespace TaskApplication.Controllers
             return BadRequest();
         }
 
-        [HttpPut("{name}")]
-        public async Task<IActionResult> Put(string name, ToDoTaskModel model)
+        [HttpPut]
+        public async Task<IActionResult> Put(ToDoTask task)
         {
             try
             {
-                var oldTask = await appRepository.GetTaskAsync(name);
-                if (oldTask == null) return NotFound($"Couldn't find task with name: {name}");
+                /*var oldTask = await appRepository.GetTaskAsync(id);
+                if (oldTask == null) return NotFound($"Couldn't find task with ID: {id}");
 
-                mapper.Map(model, oldTask);
-                //appRepository.UpdateTask(oldTask);
+                mapper.Map(model, oldTask);*/
+                appRepository.UpdateTask(task);
 
                 if (await appRepository.SaveChanges())
                 {
-                    return Ok(mapper.Map<ToDoTaskModel>(oldTask));
+                    return Ok(task);
+                    //return Ok(mapper.Map<ToDoTaskModel>(oldTask));
                 }
 
             }
@@ -157,13 +161,13 @@ namespace TaskApplication.Controllers
             return BadRequest();
         }
 
-        [HttpDelete("{name}")]
-        public async Task<IActionResult> Delete(string name)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
-                var oldTask = await appRepository.GetTaskAsync(name);
-                if (oldTask == null) return NotFound($"Couldn't find task with name: {name}");
+                var oldTask = await appRepository.GetTaskAsync(id);
+                if (oldTask == null) return NotFound($"Couldn't find task with ID: {id}");
 
                 appRepository.Delete(oldTask);
 
