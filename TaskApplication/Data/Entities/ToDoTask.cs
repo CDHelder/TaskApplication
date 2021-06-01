@@ -1,18 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace TaskApplication.Data.Entities
 {
-    public enum TypeStatus
-    {
-        Planned,
-        Doing,
-        Done
-    }
     public class ToDoTask
     {
         public int Id { get; set; }
@@ -31,5 +21,12 @@ namespace TaskApplication.Data.Entities
 
         [DataType(DataType.MultilineText)]
         public string Notes { get; set; }
+    }
+
+    public enum TypeStatus
+    {
+        Planned,
+        Doing,
+        Done
     }
 }

@@ -32,7 +32,6 @@ namespace TaskApplication.Controllers
             {
                 var tasks = await appRepository.GetAllTasksAsync();
                 return Ok(tasks);
-                //return Ok(mapper.Map<ToDoTaskModel[]>(tasks));
             }
             //Maybe exception logica toevoegen aand return
             catch (Exception ex)
@@ -52,7 +51,6 @@ namespace TaskApplication.Controllers
                     return NotFound();
 
                 return Ok(task);
-                //return Ok(mapper.Map<ToDoTaskModel>(task));
             }
             catch (Exception ex)
             {
@@ -68,7 +66,6 @@ namespace TaskApplication.Controllers
                 var tasks = await appRepository.SearchTasksByName(search);
                 if (!tasks.Any()) return NotFound();
                 return Ok(tasks);
-                //return Ok(mapper.Map<ToDoTaskModel[]>(tasks));
             }
             catch (Exception ex)
             {
@@ -84,7 +81,6 @@ namespace TaskApplication.Controllers
                 var tasks = await appRepository.SearchTaskByDate(datetime);
                 if (!tasks.Any()) return NotFound();
                 return Ok(tasks);
-                //return Ok(mapper.Map<ToDoTaskModel[]>(tasks));
             }
             catch (Exception ex)
             {
@@ -124,7 +120,6 @@ namespace TaskApplication.Controllers
                 if (await appRepository.SaveChanges())
                 {
                     return Created($"/api/Task/{task.Id}", task);
-                    //return Created($"/api/Task/{model.Id}", mapper.Map<ToDoTaskModel>(model));
                 }
             }
             catch (Exception ex)
@@ -140,18 +135,12 @@ namespace TaskApplication.Controllers
         {
             try
             {
-                /*var oldTask = await appRepository.GetTaskAsync(id);
-                if (oldTask == null) return NotFound($"Couldn't find task with ID: {id}");
-
-                mapper.Map(model, oldTask);*/
                 appRepository.UpdateTask(task);
 
                 if (await appRepository.SaveChanges())
                 {
                     return Ok(task);
-                    //return Ok(mapper.Map<ToDoTaskModel>(oldTask));
                 }
-
             }
             catch (Exception ex)
             {
