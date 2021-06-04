@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TaskApplication.Data.Configuration;
 using TaskApplication.Data.Entities;
 
 namespace TaskApplication.Data
@@ -26,6 +27,8 @@ namespace TaskApplication.Data
 
         protected override void OnModelCreating(ModelBuilder bldr)
         {
+            bldr.ApplyConfigurationsFromAssembly(typeof(Startup).Assembly);
+
                 bldr.Entity<ToDoTask>().HasData(new
             {
                 Id = 1,
@@ -53,6 +56,8 @@ namespace TaskApplication.Data
                 EndDate = DateTime.Today.AddDays(4),
                 Notes = "Ikea meubels in elkaar zetten"
             });
+
+            
         }
     }
 }

@@ -36,7 +36,6 @@ namespace TaskApplication.Data
         public async Task<ToDoTask> GetTaskAsync(int id)
         {
             return await db.ToDoTasks.FirstOrDefaultAsync(r => r.Id == id);
-
             /*IQueryable<ToDoTask> query = db.ToDoTasks;
             query = query.Where(t => t.Name == name);
             return await query.FirstOrDefaultAsync();*/
