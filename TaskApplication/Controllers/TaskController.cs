@@ -15,13 +15,11 @@ namespace TaskApplication.Controllers
     public class TaskController : ControllerBase
     {
         private readonly ITaskAppRepository appRepository;
-        private readonly IMapper mapper;
         private readonly LinkGenerator linkGenerator;
 
-        public TaskController(ITaskAppRepository appRepository, IMapper mapper, LinkGenerator linkGenerator)
+        public TaskController(ITaskAppRepository appRepository, LinkGenerator linkGenerator)
         {
             this.appRepository = appRepository;
-            this.mapper = mapper;
             this.linkGenerator = linkGenerator;
         }
 
@@ -115,7 +113,10 @@ namespace TaskApplication.Controllers
                 //var location = linkGenerator.GetPathByAction("GetTask", "Task", new { Name = model.Name });
                 //if (string.IsNullOrWhiteSpace(location)) return BadRequest($"Couldn't use name: {model.Name}");
 
-                //var task = mapper.Map<ToDoTask>(model);
+                // new { Id = task.Id }
+                var location = linkGenerator.GetPathByAction("GetTask", "Task", task.Id);
+                if (string.IsNullOrWhiteSpace(location)) return BadRequest($"Couldn't create task: {task.Name}");
+
                 appRepository.Add(task);
                 if (await appRepository.SaveChanges())
                 {
