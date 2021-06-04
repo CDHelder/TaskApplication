@@ -114,7 +114,7 @@ namespace TaskApplication.Controllers
                 //if (string.IsNullOrWhiteSpace(location)) return BadRequest($"Couldn't use name: {model.Name}");
 
                 // new { Id = task.Id }
-                var location = linkGenerator.GetPathByAction("GetTask", "Task", task.Id);
+                var location = linkGenerator.GetPathByAction("GetTask", "Task", new { Id = task.Id });
                 if (string.IsNullOrWhiteSpace(location)) return BadRequest($"Couldn't create task: {task.Name}");
 
                 appRepository.Add(task);
